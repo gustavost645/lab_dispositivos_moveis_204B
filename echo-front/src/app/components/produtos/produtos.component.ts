@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Utils } from '../utils/utils';
 import { Router } from '@angular/router';
@@ -10,6 +10,7 @@ import { Produto } from './model/produto';
 import { Observer } from 'rxjs';
 import { EmpresaService } from '../empresas/service/empresa.service';
 import * as Papa from 'papaparse';
+import { FileUpload } from 'primeng/fileupload';
 
 @Component({
   selector: 'app-produtos',
@@ -18,6 +19,7 @@ import * as Papa from 'papaparse';
   providers: [MessageService, Utils]
 })
 export class ProdutosComponent implements OnInit, OnDestroy {
+
   produtoDialog: boolean = false;
 
   tituloTela: String = 'Meus Produtos';
@@ -118,7 +120,6 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   deleteProduto(row: Produto) {
     const observer: Observer<any> = {
       next: (response) => {
-        console.log('Resposta do serviço:', response);
         this.produtoEdit = {};
       },
       error: (err) => {
@@ -262,6 +263,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
         };
 
         reader.readAsText(file);
+        event.files = [];
       } else {
         this.messageService.add({
           severity: 'warn',
@@ -269,6 +271,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
           detail: 'Por favor, selecione um arquivo CSV válido.',
           life: 3000,
         });
+        event.files = [];
       }
     }
   }
@@ -284,7 +287,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
           nomeProduto: item.nomeProduto,
           descricao: item.descricao,
           marca: item.marca,
-          preco: item.preco,
+          preco: item.preco.replace(',','.'),
         })) as Produto[]; // Atribui os dados ao array
         this.saveAllProdutos(); // Salva os produtos no backend
       },

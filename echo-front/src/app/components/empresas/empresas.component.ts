@@ -77,7 +77,6 @@ export class EmpresasComponent implements OnInit, OnDestroy {
 
     const observer: Observer<any> = {
       next: (response) => {
-        console.log(response.content);
         this.listEmpresas = response.content;
         this.totalEmpresas = response.totalElements;
         this.totalPaginas = response.totalPages;
