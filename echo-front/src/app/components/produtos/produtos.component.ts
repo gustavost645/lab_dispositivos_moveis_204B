@@ -9,6 +9,8 @@ import { Table, TableLazyLoadEvent } from 'primeng/table';
 import { Produto } from './model/produto';
 import { Observer } from 'rxjs';
 import { EmpresaService } from '../empresas/service/empresa.service';
+import { FileSelectEvent } from 'primeng/fileupload';
+import * as Papa from 'papaparse';
 
 @Component({
   selector: 'app-produtos',
@@ -17,6 +19,7 @@ import { EmpresaService } from '../empresas/service/empresa.service';
   providers: [MessageService, Utils]
 })
 export class ProdutosComponent implements OnInit, OnDestroy {
+
   produtoDialog: boolean = false;
 
   tituloTela: String = 'Meus Produtos';
@@ -235,6 +238,12 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   onFilter(dv: Table, event: Event) {
     this.globalFilterValue = (event.target as HTMLInputElement).value.toLowerCase();
     this.loadLazyProduto({first: 0, rows: this.pageSize});
+  }
+
+
+  onFileSelect($event: FileSelectEvent) {
+
+
   }
 
 }
