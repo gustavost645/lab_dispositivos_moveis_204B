@@ -9,6 +9,7 @@ import { Table, TableLazyLoadEvent } from 'primeng/table';
 import { Produto } from './model/produto';
 import { Observer } from 'rxjs';
 import { EmpresaService } from '../empresas/service/empresa.service';
+import * as Papa from 'papaparse';
 
 @Component({
   selector: 'app-produtos',
@@ -235,6 +236,98 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   onFilter(dv: Table, event: Event) {
     this.globalFilterValue = (event.target as HTMLInputElement).value.toLowerCase();
     this.loadLazyProduto({first: 0, rows: this.pageSize});
+  }
+
+  listProdutoss: Produto[] = [];
+
+  onFileSelect(event: any) {
+    const file = event.files[0];
+
+    if (file) {
+      if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const csvData = reader.result as string;
+          this.parseCSV(csvData);
+        };
+
+        reader.onerror = () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Falha ao ler o arquivo CSV.',
+            life: 3000,
+          });
+        };
+
+        reader.readAsText(file);
+      } else {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Arquivo inválido',
+          detail: 'Por favor, selecione um arquivo CSV válido.',
+          life: 3000,
+        });
+      }
+    }
+  }
+
+  parseCSV(csvData: string) {
+    Papa.parse(csvData, {
+      header: true, // Assume que a primeira linha do CSV contém os cabeçalhos
+      dynamicTyping: true, // Converte automaticamente os valores para o tipo correto (número, booleano, etc)
+      skipEmptyLines: true, // Ignora linhas em branco
+      complete: (result) => {
+        this.listProdutoss = result.data.map((item: any) => ({
+          codBarras: item.codBarras,
+          nomeProduto: item.nomeProduto,
+          descricao: item.descricao,
+          marca: item.marca,
+          preco: item.preco,
+        })) as Produto[]; // Atribui os dados ao array
+        this.saveAllProdutos(); // Salva os produtos no backend
+      },
+      error: (error: any) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro no CSV',
+          detail: `Falha ao processar o arquivo CSV: ${error.message}`,
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  saveAllProdutos() {
+    this.listProdutoss.forEach((produto) => {
+
+      const produtoComEmpresa = {
+        ...produto,
+        empresa: this.empresaSelecionada,
+      };
+
+      this.produtoService.save(produtoComEmpresa).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: `Produto "${produtoComEmpresa.nomeProduto}" salvo com sucesso!`,
+            life: 3000,
+          });
+          this.refresh();
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: `Erro ${err.status}`,
+            detail: `Falha ao salvar "${produtoComEmpresa.nomeProduto}": ${err.statusText}`,
+            life: 3000,
+          });
+          console.error('Erro ao salvar produto:', err);
+        },
+      });
+    });
   }
 
 }

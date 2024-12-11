@@ -16,6 +16,9 @@
             "outputPath": "dist/pedidos",
             "index": "src/index.html",
             "main": "src/main.ts",
+            "allowedCommonJsDependencies": [
+              "papaparse"
+            ],
             "polyfills": [
               "zone.js"
             ],

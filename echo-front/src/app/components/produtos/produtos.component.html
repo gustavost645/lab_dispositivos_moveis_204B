@@ -2,6 +2,26 @@
   <div class="col-12">
     <div class="card px-4 p-card">
       <p-toast></p-toast>
+
+      <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="left">
+            <div class="my-2">
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+          <p-fileUpload 
+            mode="basic" 
+            accept=".csv" 
+            [maxFileSize]="1000000" 
+            label="Importar CSV" 
+            chooseLabel="Escolher CSV" 
+            (onSelect)="onFileSelect($event)"
+            class="mr-2 inline-block">
+          </p-fileUpload>
+        </ng-template>
+      </p-toolbar>
+
       <div class="flex align-items-center justify-content-between">
         <div class="flex align-items-center">
           <h5 style="margin-top: 15px !important">{{ tituloTela }}</h5>
