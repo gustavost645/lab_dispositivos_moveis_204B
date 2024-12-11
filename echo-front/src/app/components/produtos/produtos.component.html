@@ -1,0 +1,115 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card px-4 p-card">
+      <p-toast></p-toast>
+      <div class="flex align-items-center justify-content-between">
+        <div class="flex align-items-center">
+          <h5 style="margin-top: 15px !important">{{ tituloTela }}</h5>
+        </div>
+      </div>
+      <p-toolbar styleClass="mb-12">
+        <div class="flex flex-column md:flex-row" style="width: 100% !important">
+          <p-dropdown
+            [options]="empresas"
+            [(ngModel)]="empresaSelecionada"
+            optionLabel="nomeFantasia"
+            placeholder="Selecione uma empresa"
+            (onChange)="onEmpresaChange($event)">
+          </p-dropdown>
+        </div>
+        <div class="flex flex-column md:flex-row" style="width: 100% !important">
+          <span class="p-input-icon-left" style="width: 100% !important">
+            <i class="pi pi-search"></i>
+            <input type="search" pInputText placeholder="Pesquisar" (input)="onFilter(dv, $event)"
+              style="width: 100% !important" [disabled]="!empresaSelecionada"/>
+          </span>
+        </div>
+      </p-toolbar>
+      <p-table #dv [value]="listProdutos" [lazy]="true" [lazyLoadOnInit]="false" (onLazyLoad)="loadLazyProduto($event)" dataKey="id"
+        [tableStyle]="{ 'min-width': '60rem' }" [paginator]="true" [rows]="15" [totalRecords]="totalProdutos"
+        [loading]="loading" [globalFilterFields]="['id','descricao','codBarras']"
+        currentPageReportTemplate="Exibindo {first} a {last} de {totalRecords} registros">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Id</th>
+            <th>Cod. Barras</th>
+            <th>Produto</th>
+            <th>Descrição</th>
+            <th>Marca</th>
+            <th>Preço</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-row let-expanded="expanded">
+          <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ row.codBarras }}</td>
+            <td>{{ row.nomeProduto }}</td>
+            <td>{{ row.descricao }}</td>
+            <td>{{ row.marca}}</td>
+            <td>{{ row.preco | currency: 'BRL' }}</td>
+            <td>
+              <div class="flex">
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                  (click)="editProduto(row)"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                  (click)="deleteProduto(row)"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">Não há registros.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-fab-button descricao="" icone="pi pi-plus" (click)="openNewProduto()"></app-fab-button>
+    </div>
+
+    <p-dialog [(visible)]="produtoDialog" [style]="{width: '450px'}" header="Produto" [modal]="true"
+      class="p-fluid">
+      <ng-template pTemplate="content">
+
+        <div class="field">
+          <label for="name">Nome Produto</label>
+          <input type="text" pInputText id="nomeProduto" [(ngModel)]="produtoEdit.nomeProduto" required autofocus />
+        </div>
+
+        <div class="field">
+          <label for="name">Descrição</label>
+          <input type="text" pInputText id="descricao" [(ngModel)]="produtoEdit.descricao" required autofocus />
+        </div>
+
+        <div class="field">
+          <label for="name">marca</label>
+          <input type="text" pInputText id="marca" [(ngModel)]="produtoEdit.marca" required autofocus />
+        </div>
+
+        <div class="formgrid grid">
+          <div class="field col">
+            <label for="name">Cod Barras</label>
+            <input type="text" pInputText id="codbarras" [(ngModel)]="produtoEdit.codBarras" required autofocus />
+          </div>
+
+          <div class="field col">
+            <label for="name">Preço</label>
+            <p-inputNumber
+                id="preco"
+                [(ngModel)]="produtoEdit.preco"
+                mode="currency"
+                currency="BRL"
+                locale="pt-BR">
+            </p-inputNumber>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Fechar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="saveProduto()"></button>
+      </ng-template>
+    </p-dialog>
+
+  </div>
+</div>

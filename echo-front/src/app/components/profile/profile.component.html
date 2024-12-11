@@ -1,0 +1,40 @@
+<div class="formgrid grid">
+  <div class="col-12 md:col-6">
+    <p-toast></p-toast>
+    <div class="card p-fluid">
+      <h5>Perfil</h5>
+
+      <div class="field">
+        <span class="p-input-icon-left" style="display: flex !important;">
+          <i class="pi pi-id-card"></i>
+          <input type="text" [(ngModel)]="register.nome" pInputText placeholder="Nome Completo" class="w-full" />
+        </span>
+      </div>
+
+      <div class="field">
+        <span class="p-input-icon-left" style="display: flex !important;">
+          <i class="pi pi-envelope"></i>
+          <input type="text" [(ngModel)]="register.email" pInputText placeholder="E-mail" class="w-full" />
+        </span>
+      </div>
+
+
+      <div class="field">
+        <span class="p-input-icon-left" style="display: flex !important;">
+          <i class="pi pi-user"></i>
+          <input type="text" [(ngModel)]="register.login" pInputText placeholder="Usuário" class="w-full" />
+        </span>
+      </div>
+
+      <div class="field">
+        <span class="p-input-icon-left" style="display: flex !important;">
+          <i class="pi pi-lock"></i>
+          <input type="password" [(ngModel)]="register.password" pPassword placeholder="Senha" class="w-full" />
+        </span>
+      </div>
+
+      <button pButton pRipple label="Salvar" class="p-button p-button-primary"
+        (click)="alterar()"></button>
+    </div>
+  </div>
+</div>

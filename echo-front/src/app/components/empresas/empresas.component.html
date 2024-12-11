@@ -1,0 +1,123 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card px-4 p-card">
+      <p-toast></p-toast>
+      <div class="flex align-items-center justify-content-between">
+        <div class="flex align-items-center">
+          <h5 style="margin-top: 15px !important">{{ tituloTela }}</h5>
+        </div>
+      </div>
+      <p-toolbar styleClass="mb-12">
+        <div class="flex flex-column md:flex-row" style="width: 100% !important">
+          <span class="p-input-icon-left" style="width: 100% !important">
+            <i class="pi pi-search"></i>
+            <input type="search" pInputText placeholder="Pesquisar" (input)="onFilter(dv, $event)"
+              style="width: 100% !important" />
+          </span>
+        </div>
+      </p-toolbar>
+      <p-table #dv [value]="listEmpresas" [lazy]="true" (onLazyLoad)="loadLazyEmpresas($event)" dataKey="id"
+        [tableStyle]="{ 'min-width': '60rem' }" [paginator]="true" [rows]="15" [totalRecords]="totalEmpresas"
+        [loading]="loading" [globalFilterFields]="['id','nomeFantasia']"
+        currentPageReportTemplate="Exibindo {first} a {last} de {totalRecords} registros">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Id</th>
+            <th>Empresa</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-row let-expanded="expanded">
+          <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ row.nomeFantasia }}</td>
+            <td>
+              <div class="flex">
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                  (click)="editEmpresa(row)"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                  (click)="deleteEmpresa(row)"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">Não há registros.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-fab-button descricao="" icone="pi pi-plus" (click)="openNewEmpresa()"></app-fab-button>
+    </div>
+
+    <p-dialog [(visible)]="empresaDialog" [style]="{width: '450px'}" header="Empresa" [modal]="true"
+      class="p-fluid">
+      <ng-template pTemplate="content">
+
+        <div class="field">
+          <label for="name">Nome Fantasia</label>
+          <input type="text" pInputText id="nomeFantasia" [(ngModel)]="empresaEdit.nomeFantasia" required autofocus />
+        </div>
+
+        <div class="field">
+          <label for="name">Razão Social</label>
+          <input type="text" pInputText id="razaoSocial" [(ngModel)]="empresaEdit.razaoSocial" required autofocus />
+        </div>
+
+        <div class="formgrid grid">
+          <div class="field col">
+            <label for="name">CPF ou CNPJ</label>
+            <input type="text" pInputText id="cnpjCpf" [(ngModel)]="empresaEdit.cnpjCpf" required autofocus />
+          </div>
+          <div class="field col">
+            <label for="name">Estado</label>
+            <input type="text" pInputText id="estado" [(ngModel)]="empresaEdit.estado" required autofocus />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="name">Endereço</label>
+          <input type="text" pInputText id="endereco" [(ngModel)]="empresaEdit.endereco" required autofocus />
+        </div>
+
+        <div class="field">
+          <label for="name">Bairro</label>
+          <input type="text" pInputText id="bairro" [(ngModel)]="empresaEdit.bairro" required autofocus />
+        </div>
+
+        <div class="field">
+          <label for="name">Cidade</label>
+          <input type="text" pInputText id="cidade" [(ngModel)]="empresaEdit.cidade" required autofocus />
+        </div>
+
+        <div class="formgrid grid">
+          <div class="field col">
+            <label for="name">Numero</label>
+            <input type="text" pInputText id="numero" [(ngModel)]="empresaEdit.numero" required autofocus />
+          </div>
+          <div class="field col">
+            <label for="name">Complemeto</label>
+            <input type="text" pInputText id="complemento" [(ngModel)]="empresaEdit.complemento" required autofocus />
+          </div>
+        </div>
+
+        <div class="formgrid grid">
+          <div class="field col">
+            <label for="price">Longitude</label>
+            <input type="text" pInputText id="longetude" [(ngModel)]="empresaEdit.longitude" required autofocus />
+          </div>
+          <div class="field col">
+            <label for="quantity">Latitude</label>
+            <input type="text" pInputText id="latitude" [(ngModel)]="empresaEdit.latitude" required autofocus />
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Fechar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="saveEmpresa()"></button>
+      </ng-template>
+    </p-dialog>
+
+  </div>
+</div>

@@ -1,0 +1,21 @@
+<div class="field col-12">
+  <div
+    class="image-drop-zone"
+    (drop)="onDrop($event)"
+    (dragover)="onDragOver($event)"
+  >
+    <ng-container *ngIf="!imageData">
+      <div class="center-container">
+        <p class="center-text">Arraste e solte uma imagem aqui</p>
+        <label for="arquivo" pButton class="label-upload">Enviar arquivo</label>
+      </div>
+      <input type="file" (change)="onFileSelected($event)" name="arquivo" style="display: none;" id="arquivo">
+    </ng-container>
+    <div *ngIf="imageData" class="image-preview">
+      <img [src]="'data:image/jpeg;base64,' + imageData" alt="Preview da imagem" />
+      <button *ngIf="renderButtonRemove" (click)="removeImage()" class="remove-button">
+        X
+      </button>
+    </div>
+  </div>
+</div>
